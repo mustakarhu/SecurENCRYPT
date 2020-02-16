@@ -53,22 +53,38 @@ def decrypt(key, filename):
 
 
 
-def getKey(password):
-	hasher = SHA256.new(password.encode('utf-8'))
-	return hasher.digest()
+def get_key(PWInput):
+'''
+input(s)
+	password: name of the file to be used for digest generation. This file is effectively the password for the cipher
+return value(s)
+	hash digest: computed from password file input
+'''
+	Password=''.encode("utf-8")
+	with open(PWInput, 'r') as PWFile:
+		for Line in PWFile:
+			Password+= Line.encode('utf-8')
+
+	Hasher = SHA256.new(Password)
+
+	return Hasher.digest()
 
 
 def main():
 
-	func = input("function e, d: ")
-	if(func=="e"):
+	selection = input("Select e for encrypt or d for decrypt: ")
+	if(selection.lower()=="e"):
 		filename = input("Name of file to be encrypted: ")
-		password = input("Password: ")
-		encrypt(getKey(password),filename)
-	elif(func=="d"):
+		password = input("Name of the password file: ")
+		encrypt(get_key(password),filename)
+
+	elif(selection.lower()=="d"):
 		filename = input("Name of file to be decrypted: ")
-		password = input("Password: ")
-		decrypt(getKey(password),filename)
+		password = input("Name of the password file: ")
+		decrypt(get_key(password),filename)
+
+	else:
+		print("Invalid input please try again.")
 
 if __name__ == '__main__':
 	main()
